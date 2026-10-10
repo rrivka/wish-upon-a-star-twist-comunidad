@@ -9,26 +9,32 @@
 
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   const sfx = window.SFX;
-
-  // tintineos de cristal mientras las estrellas entran colgando
-  sfx?.loaderEnter(loader.querySelectorAll('.hanger').length);
   const pageLoaded = new Promise((r) => {
     if (document.readyState === 'complete') r();
     else window.addEventListener('load', r, { once: true });
   });
 
-  Promise.all([wait(MIN_TIME), Promise.race([pageLoaded, wait(MAX_WAIT)])])
-    .then(() => {
-      loader.classList.add('is-lit');
-      sfx?.lightUp();
-      return wait(LIGHT_UP);
-    })
-    .then(() => {
-      loader.classList.add('is-leaving');
-      document.body.classList.remove('is-loading');
-      sfx?.rise();
-      setTimeout(() => sfx?.headerOpen(), 450);   // estrellas suaves al aparecer el header
-      return wait(EXIT);
-    })
-    .then(() => loader.remove());
+  // la carga empieza cuando la persona entrega su deseo en la pantalla de entrada
+  const start = () => {
+    loader.classList.remove('is-waiting');
+    // tintineos de cristal mientras las estrellas entran colgando
+    sfx?.loaderEnter(loader.querySelectorAll('.hanger').length);
+
+    Promise.all([wait(MIN_TIME), Promise.race([pageLoaded, wait(MAX_WAIT)])])
+      .then(() => {
+        loader.classList.add('is-lit');
+        sfx?.lightUp();
+        return wait(LIGHT_UP);
+      })
+      .then(() => {
+        loader.classList.add('is-leaving');
+        document.body.classList.remove('is-loading');
+        sfx?.rise();
+        setTimeout(() => sfx?.headerOpen(), 450);   // estrellas suaves al aparecer el header
+        return wait(EXIT);
+      })
+      .then(() => loader.remove());
+  };
+
+  (window.WishGate || Promise.resolve()).then(start);
 })();

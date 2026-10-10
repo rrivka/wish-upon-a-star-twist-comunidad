@@ -321,6 +321,22 @@ window.SFX = (() => {
       bell(987.8, t + 0.1, { vol: 0.04, dur: 1 });
     },
 
+    // el deseo se entrega: notas que suben despacio y un brillo largo hacia el cielo
+    wish() {
+      if (!play('wish', 2.6)) return;
+      const t = ctx.currentTime;
+      pad(392, t, 2.4, 0.03);
+      pad(587.3, t + 0.1, 2.4, 0.025);
+      [784, 1046.5, 1318.5, 1568, 2093, 2637].forEach((f, i) => bell(f, t + 0.15 + i * 0.12, { vol: 0.05, dur: 2 }));
+      shimmer(t, 1.8, 900, 9000, 0.035);
+    },
+
+    // habilita el audio (debe llamarse dentro de un toque o clic)
+    unlock() {
+      unlock();
+      return ctx ? ctx.resume() : Promise.resolve();
+    },
+
     get enabled() { return enabled; },
     get state() { return ctx ? ctx.state : 'sin iniciar'; },
     setEnabled(on) {

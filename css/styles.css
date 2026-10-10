@@ -1403,9 +1403,171 @@ div.frame__qr span {
   opacity: .5;
 }
 
+/* ============ ENTRADA: PEDIR UN DESEO ============ */
+
+.gate {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow: hidden;
+  background: #000;
+  text-align: center;
+  transition: opacity 1.4s ease, visibility 0s linear 1.4s;
+}
+/* un resplandor muy tenue en el centro, como una estrella lejana */
+.gate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 46%, rgba(40, 70, 150, .28), transparent 55%);
+  animation: gate-breathe 6s ease-in-out infinite;
+}
+@keyframes gate-breathe {
+  0%, 100% { opacity: .6; scale: 1; }
+  50%      { opacity: 1;  scale: 1.08; }
+}
+.gate__sky { position: absolute; inset: 0; pointer-events: none; }
+.gate__twinkle {
+  position: absolute;
+  width: var(--s);
+  height: var(--s);
+  color: var(--c);
+  opacity: 0;
+  animation: gate-twinkle var(--d) ease-in-out var(--delay) infinite;
+}
+.gate__twinkle svg { width: 100%; height: 100%; display: block; }
+@keyframes gate-twinkle {
+  0%, 100% { opacity: 0;  scale: .4; }
+  50%      { opacity: .8; scale: 1; }
+}
+
+.gate__inner {
+  position: relative;
+  max-width: 420px;
+}
+.gate__star {
+  width: 46px;
+  height: 46px;
+  margin-bottom: 14px;
+  filter: drop-shadow(0 0 10px rgba(255, 220, 130, .8)) drop-shadow(0 0 26px rgba(130, 190, 255, .5));
+  animation: star-glow 4s ease-in-out infinite;
+}
+.gate__title {
+  margin: 0;
+  padding: .05em .15em .1em;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 9vw, 3.4rem);
+  line-height: 1.05;
+  color: var(--gold);
+  background: linear-gradient(180deg, #fffbea 0%, #ffe9a6 40%, #f3c454 75%, #d6972a 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 14px rgba(255, 210, 110, .45));
+}
+.gate__text {
+  margin: 14px auto 30px;
+  max-width: 30ch;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.05rem, 3.6vw, 1.2rem);
+  line-height: 1.5;
+  color: var(--ice);
+  opacity: .85;
+}
+
+/* el botón: una píldora dorada con un aura que respira y dos destellos en órbita */
+.gate__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 30px;
+  border: 1.5px solid #ffe9a6;
+  border-radius: 999px;
+  background:
+    radial-gradient(ellipse at 50% 0, rgba(255, 233, 166, .25), transparent 70%),
+    linear-gradient(180deg, #13306e, #0a1a44);
+  color: var(--gold-light);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.35;
+  letter-spacing: .06em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  animation: gate-aura 2.8s ease-in-out infinite;
+  transition: scale .3s ease, opacity .5s ease, filter .5s ease;
+}
+.gate__btn > svg { width: 14px; height: 14px; color: var(--gold); flex: none; }
+.gate__btn:hover { scale: 1.04; }
+.gate__btn:active { scale: .97; }
+.gate__btn:focus-visible { outline: 2px solid var(--ice); outline-offset: 5px; }
+@keyframes gate-aura {
+  0%, 100% { box-shadow: 0 0 14px rgba(255, 210, 120, .35), 0 0 40px rgba(90, 150, 255, .18), inset 0 0 12px rgba(255, 220, 140, .15); }
+  50%      { box-shadow: 0 0 26px rgba(255, 220, 140, .7),  0 0 70px rgba(110, 170, 255, .35), inset 0 0 16px rgba(255, 220, 140, .3); }
+}
+.gate__orbit {
+  position: absolute;
+  inset: -14px -20px;
+  pointer-events: none;
+  animation: gate-orbit 7s linear infinite;
+}
+.gate__orbit + .gate__orbit { animation-duration: 10s; animation-direction: reverse; }
+.gate__orbit svg {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  color: var(--gold-light);
+  filter: drop-shadow(0 0 6px rgba(255, 220, 130, .9));
+}
+.gate__orbit + .gate__orbit svg { top: auto; bottom: 0; left: 30%; width: 9px; height: 9px; color: var(--ice); }
+@keyframes gate-orbit { to { rotate: 360deg; } }
+
+.gate__hint {
+  margin: 22px 0 0;
+  font-family: var(--font-sans);
+  font-size: .75rem;
+  letter-spacing: .06em;
+  color: var(--ice-soft);
+  opacity: .55;
+}
+
+/* destellos que suben al entregar el deseo (los crea gate.js) */
+.gate__spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  pointer-events: none;
+  filter: drop-shadow(0 0 6px rgba(255, 220, 130, .9));
+}
+.gate__spark svg { width: 100%; height: 100%; display: block; }
+
+/* deseo entregado: el botón se vuelve luz y el texto se desvanece */
+.gate.is-sent .gate__btn {
+  animation: none;
+  scale: .2;
+  opacity: 0;
+  filter: brightness(3) blur(2px);
+  transition: scale .7s cubic-bezier(.5, 0, .7, .4), opacity .7s ease .1s, filter .7s ease;
+}
+.gate.is-sent .gate__inner > :not(.gate__btn) { opacity: 0; transition: opacity .6s ease; }
+/* la oscuridad se aclara y deja ver la pantalla de carga */
+.gate.is-open { opacity: 0; visibility: hidden; pointer-events: none; }
+
 /* ============ PANTALLA DE CARGA ============ */
 
-body.is-loading { overflow: hidden; }
+.js body.is-loading { overflow: hidden; }
+
+/* sin JavaScript no hay entrada ni pantalla de carga: la página se muestra directo */
+html:not(.js) .gate,
+html:not(.js) .loader { display: none; }
 
 .loader {
   position: fixed;
@@ -1415,10 +1577,10 @@ body.is-loading { overflow: hidden; }
   background:
     radial-gradient(ellipse at 50% 20%, #17377a 0%, #0c1d48 45%, var(--night-deep) 100%);
   transition: opacity .9s ease .45s, visibility 0s linear 1.35s;
-  /* red de seguridad: si el JS falla, el loader desaparece solo */
-  animation: loader-failsafe .6s ease 7s forwards;
 }
-@keyframes loader-failsafe { to { opacity: 0; visibility: hidden; } }
+/* antes de tocar el botón de entrada, las estrellas esperan quietas y ocultas */
+.loader.is-waiting .hanger { animation: none; visibility: hidden; }
+.loader.is-waiting .loader__text { visibility: hidden; }
 
 .loader__stars { position: absolute; inset: 0; }
 
@@ -1564,13 +1726,10 @@ body.is-loading { overflow: hidden; }
 .hero > .crest {
   transition: opacity 1.3s ease .35s, filter 1.3s ease .35s, transform 1.3s cubic-bezier(.2, .7, .3, 1) .35s;
 }
-body.is-loading .hero > .hero__bg { opacity: 0; filter: blur(8px); transform: scale(1.06); }
-body.is-loading .hero > .crest    { opacity: 0; transform: translateY(24px) scale(.97); }
-body.is-loading .hero > .hero__bg,
-body.is-loading .hero > .crest    { animation: page-failsafe .6s ease 7s forwards; }
+.js body.is-loading .hero > .hero__bg { opacity: 0; filter: blur(8px); transform: scale(1.06); }
+.js body.is-loading .hero > .crest    { opacity: 0; transform: translateY(24px) scale(.97); }
 .star-divider { transition: opacity 1.3s ease .6s; }
-body.is-loading .star-divider { opacity: 0; animation: page-failsafe .6s ease 7s forwards; }
-@keyframes page-failsafe { to { opacity: 1; filter: none; transform: none; } }
+.js body.is-loading .star-divider { opacity: 0; }
 
 @media (max-width: 600px) {
   .hanger { --w: calc(var(--size) * .78px); }
@@ -1687,6 +1846,7 @@ body.is-loading .sound-toggle { opacity: 0; pointer-events: none; }
   .about__text .w, .about__text .dropcap { transition: none !important; animation: none !important; }
   .qr-veil, .qr-veil__seal, .qr-veil__ring, .qr-veil::after { transition-duration: .01s !important; animation: none !important; }
   .slide, .carousel__current { transition-duration: .01s !important; animation: none !important; }
+  .gate::before, .gate__twinkle, .gate__btn, .gate__orbit { animation: none !important; }
   .lore__sep svg, .ink-drip__fall { animation: none !important; }
   .lore.has-js .lore__p { transition-duration: .01s !important; }
   .admin { transition: none; }

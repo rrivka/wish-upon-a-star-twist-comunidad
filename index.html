@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="es">
 <head>
+  <script>document.documentElement.classList.add('js');</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Wish upon a star · a twist community</title>
@@ -8,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Quicksand:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=19">
+  <link rel="stylesheet" href="css/styles.css?v=20">
 </head>
 <body class="is-loading">
 
@@ -70,8 +71,27 @@
     </defs>
   </svg>
 
+  <!-- ============ ENTRADA: PEDIR UN DESEO ============ -->
+  <!-- al tocar el botón se habilita el sonido y empieza la pantalla de carga (gate.js) -->
+  <div class="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+    <div class="gate__sky" aria-hidden="true"></div>
+    <div class="gate__inner">
+      <svg class="gate__star" aria-hidden="true"><use href="#star"/></svg>
+      <h2 class="gate__title" id="gate-title">Pide un deseo</h2>
+      <p class="gate__text">Las estrellas solo escuchan a quienes se atreven a desear.</p>
+      <button class="gate__btn" type="button" autofocus>
+        <span class="gate__orbit" aria-hidden="true"><svg><use href="#sparkle"/></svg></span>
+        <span class="gate__orbit" aria-hidden="true"><svg><use href="#sparkle"/></svg></span>
+        <svg aria-hidden="true"><use href="#sparkle"/></svg>
+        Entregar mi deseo a las estrellas
+        <svg aria-hidden="true"><use href="#sparkle"/></svg>
+      </button>
+      <p class="gate__hint">✦ Esta experiencia tiene sonido ✦</p>
+    </div>
+  </div>
+
   <!-- ============ PANTALLA DE CARGA ============ -->
-  <div class="loader" role="status" aria-live="polite">
+  <div class="loader is-waiting" role="status" aria-live="polite">
     <div class="loader__stars" aria-hidden="true">
       <!-- --x posición · --len largo del hilo · --size tamaño · --i orden de entrada -->
       <div class="hanger from-left"              style="--x:6%;  --len:18vh; --size:70;  --i:0"><div class="hanger__body"><span class="hanger__string"></span><span class="hanger__glow"></span><svg class="lantern"><use href="#lantern"/></svg></div></div>
@@ -348,20 +368,20 @@
     </div>
 
     <div class="tabs" role="tablist" aria-label="Más de la comunidad">
-      <button class="tab" role="tab" id="tab-rules" aria-controls="panel-rules" aria-selected="false" tabindex="-1">
+      <button class="tab" role="tab" id="tab-rules" aria-controls="panel-rules" aria-selected="true">
         <svg aria-hidden="true"><use href="#sparkle"/></svg>Normas de convivencia
       </button>
       <button class="tab" role="tab" id="tab-prereqs" aria-controls="panel-prereqs" aria-selected="false" tabindex="-1">
         <svg aria-hidden="true"><use href="#sparkle"/></svg>Prerrequisitos para rolear
       </button>
-      <button class="tab" role="tab" id="tab-contact" aria-controls="panel-contact" aria-selected="true">
+      <button class="tab" role="tab" id="tab-contact" aria-controls="panel-contact" aria-selected="false" tabindex="-1">
         <svg aria-hidden="true"><use href="#sparkle"/></svg>Contáctanos
       </button>
     </div>
 
     <!-- todos los paneles ocupan la misma celda: el alto es siempre el del más alto -->
     <div class="tab-panels">
-      <div class="tab-panel" role="tabpanel" id="panel-rules" aria-labelledby="tab-rules" hidden>
+      <div class="tab-panel" role="tabpanel" id="panel-rules" aria-labelledby="tab-rules">
         <div class="info">
           <h3 class="info__title">Normas de convivencia</h3>
           <div class="carousel" role="region" aria-roledescription="carrusel" aria-label="Normas de convivencia">
@@ -441,7 +461,7 @@
         </div>
       </div>
 
-      <div class="tab-panel" role="tabpanel" id="panel-contact" aria-labelledby="tab-contact">
+      <div class="tab-panel" role="tabpanel" id="panel-contact" aria-labelledby="tab-contact" hidden>
         <div class="contact">
           <!-- el QR va dentro de .frame__qr; luego puede ser un <img class="frame__qr"> -->
           <div class="frame frame--square">
@@ -499,15 +519,16 @@
     <svg class="sound-toggle__off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="wave" d="M16.5 9.5l5 5M21.5 9.5l-5 5"/></svg>
   </button>
 
-  <script src="js/sfx.js?v=19"></script>
-  <script src="js/loader.js?v=19"></script>
-  <script src="js/header.js?v=19"></script>
-  <script src="js/frames.js?v=19"></script>
-  <script src="js/about.js?v=19"></script>
-  <script src="js/tabs.js?v=19"></script>
-  <script src="js/statues.js?v=19"></script>
-  <script src="js/contact.js?v=19"></script>
-  <script src="js/carousel.js?v=19"></script>
-  <script src="js/lore.js?v=19"></script>
+  <script src="js/sfx.js?v=20"></script>
+  <script src="js/gate.js?v=20"></script>
+  <script src="js/loader.js?v=20"></script>
+  <script src="js/header.js?v=20"></script>
+  <script src="js/frames.js?v=20"></script>
+  <script src="js/about.js?v=20"></script>
+  <script src="js/tabs.js?v=20"></script>
+  <script src="js/statues.js?v=20"></script>
+  <script src="js/contact.js?v=20"></script>
+  <script src="js/carousel.js?v=20"></script>
+  <script src="js/lore.js?v=20"></script>
 </body>
 </html>

@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wish upon a star · a twist community</title>
+  <link rel="preload" href="assets/fonts/WishMF.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Quicksand:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=19">
+</head>
+<body class="is-loading">
+
+  <!-- Símbolos reutilizables: la estrella principal y el destello pequeño -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <!-- dorado compartido por los marcos -->
+      <linearGradient id="gold-grad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#fff2b8"/>
+        <stop offset=".35" stop-color="#f3c94f"/>
+        <stop offset=".7" stop-color="#d9a42c"/>
+        <stop offset="1" stop-color="#a8721e"/>
+      </linearGradient>
+      <symbol id="star" viewBox="0 0 100 100">
+        <!-- estrella diagonal (azul hielo) -->
+        <path d="M24 24 L50 38 L76 24 L62 50 L76 76 L50 62 L24 76 L38 50 Z"
+              fill="#bfe2ff" stroke="#eef8ff" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M24 24 L50 38 L50 50 Z M76 24 L62 50 L50 50 Z M76 76 L50 62 L50 50 Z M24 76 L38 50 L50 50 Z" fill="#e6f4ff"/>
+        <!-- contorno de la estrella principal -->
+        <path d="M50 2 L60 40 L98 50 L60 60 L50 98 L40 60 L2 50 L40 40 Z"
+              fill="#f3c94f" stroke="#eaf6ff" stroke-width="5" stroke-linejoin="round"/>
+        <!-- facetas doradas -->
+        <path d="M50 2 L40 40 L50 50 Z" fill="#fff2b8"/>
+        <path d="M50 2 L60 40 L50 50 Z" fill="#f3c94f"/>
+        <path d="M98 50 L60 40 L50 50 Z" fill="#ffe27a"/>
+        <path d="M98 50 L60 60 L50 50 Z" fill="#d9a42c"/>
+        <path d="M50 98 L60 60 L50 50 Z" fill="#c78d1f"/>
+        <path d="M50 98 L40 60 L50 50 Z" fill="#e9b83e"/>
+        <path d="M2 50 L40 60 L50 50 Z" fill="#f0c44a"/>
+        <path d="M2 50 L40 40 L50 50 Z" fill="#ffeaa3"/>
+      </symbol>
+      <symbol id="sparkle" viewBox="0 0 20 20">
+        <path d="M10 0 Q11 9 20 10 Q11 11 10 20 Q9 11 0 10 Q9 9 10 0 Z" fill="currentColor"/>
+      </symbol>
+      <!-- estrella-farol colgante (hexagrama facetado); tonos --f1 (luz) a --f4 (sombra), luz desde arriba a la izquierda -->
+      <radialGradient id="lantern-core">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+        <stop offset=".5" stop-color="#ffffff" stop-opacity=".35"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </radialGradient>
+      <symbol id="lantern" viewBox="-50 -56 100 106">
+        <circle cx="0" cy="-51" r="3" fill="none" stroke="#dbe9ff" stroke-width="1.4"/>
+        <g stroke="var(--edge)" stroke-width="1" stroke-linejoin="round">
+          <path d="M0 0 L0 -48 L-13.86 -24 Z" fill="var(--f1)"/>
+          <path d="M0 0 L0 -48 L13.86 -24 Z" fill="var(--f2)"/>
+          <path d="M0 0 L41.57 -24 L13.86 -24 Z" fill="var(--f2)"/>
+          <path d="M0 0 L41.57 -24 L27.71 0 Z" fill="var(--f3)"/>
+          <path d="M0 0 L41.57 24 L27.71 0 Z" fill="var(--f3)"/>
+          <path d="M0 0 L41.57 24 L13.86 24 Z" fill="var(--f4)"/>
+          <path d="M0 0 L0 48 L13.86 24 Z" fill="var(--f4)"/>
+          <path d="M0 0 L0 48 L-13.86 24 Z" fill="var(--f3)"/>
+          <path d="M0 0 L-41.57 24 L-13.86 24 Z" fill="var(--f3)"/>
+          <path d="M0 0 L-41.57 24 L-27.71 0 Z" fill="var(--f2)"/>
+          <path d="M0 0 L-41.57 -24 L-27.71 0 Z" fill="var(--f2)"/>
+          <path d="M0 0 L-41.57 -24 L-13.86 -24 Z" fill="var(--f1)"/>
+        </g>
+        <circle r="24" fill="url(#lantern-core)" opacity="var(--core)"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ============ PANTALLA DE CARGA ============ -->
+  <div class="loader" role="status" aria-live="polite">
+    <div class="loader__stars" aria-hidden="true">
+      <!-- --x posición · --len largo del hilo · --size tamaño · --i orden de entrada -->
+      <div class="hanger from-left"              style="--x:6%;  --len:18vh; --size:70;  --i:0"><div class="hanger__body"><span class="hanger__string"></span><span class="hanger__glow"></span><svg class="lantern"><use href="#lantern"/></svg></div></div>
+      <div class="hanger from-left is-blue"      style="--x:15%; --len:34vh; --size:95;  --i:1"><div class="hanger__body"><span class="hanger__string"></span><span class="hanger__glow"></span><svg class="lantern"><use href="#lantern"/></svg></div></div>
+      <div class="hanger from-left hide-sm"      style="--x:24%; --len:11vh; --size:60;  --i:2"><div class="hanger__body"><span class="hanger__string"></span><span class="hanger__glow"></span><svg class="lantern"><use href="#lantern"/></svg></div></div>
+      <div class="hanger from-left"              style="--x:33%; --len:25vh; --size:108; --i:3"><div class="hanger__body"><span class="hanger__string"></span><span class="hanger__glow"></span><svg class="lantern"><use href="#lantern"/></svg></div></div>
+      <div class="hanger from-left is-blue hide-sm" style="--x:42%; --len:40vh; --size:74; --i:4"><div class="hanger__body"><span class="hanger__string"></span><span class="hanger__glow"></span><svg class="lantern"><use href="#lantern"/></svg></div></div>
+      <div class="hanger from-right"             style="--x:52%; --len:15vh; --size:88;  --i:4"><div class="hanger__body"><span class="hanger__string"></span><span class="hanger__glow"></span><svg class="lantern"><use href="#lantern"/></svg></div></div>
+      <div class="hanger from-right is-blue"     style="--x:62%; --len:32vh; --size:102; --i:3"><div class="hanger__body"><span class="hanger__string"></span><span class="hanger__glow"></span><svg class="lantern"><use href="#lantern"/></svg></div></div>
+      <div class="hanger from-right hide-sm"     style="--x:71%; --len:9vh;  --size:62;  --i:2"><div class="hanger__body"><span class="hanger__string"></span><span class="hanger__glow"></span><svg class="lantern"><use href="#lantern"/></svg></div></div>
+      <div class="hanger from-right"             style="--x:80%; --len:23vh; --size:98;  --i:1"><div class="hanger__body"><span class="hanger__string"></span><span class="hanger__glow"></span><svg class="lantern"><use href="#lantern"/></svg></div></div>
+      <div class="hanger from-right is-blue"     style="--x:90%; --len:38vh; --size:70;  --i:0"><div class="hanger__body"><span class="hanger__string"></span><span class="hanger__glow"></span><svg class="lantern"><use href="#lantern"/></svg></div></div>
+    </div>
+    <p class="loader__text">Cargando<span class="loader__dots"><i>.</i><i>.</i><i>.</i></span></p>
+  </div>
+
+  <header class="hero">
+    <div class="hero__bg" aria-hidden="true">
+      <img src="assets/img/header-bg.webp" alt="" fetchpriority="high">
+    </div>
+    <div class="hero__sky" aria-hidden="true"></div>
+    <div class="hero__particles" aria-hidden="true"></div>
+
+    <!-- estrella fugaz que cruza el cielo de vez en cuando -->
+    <div class="meteor" aria-hidden="true">
+      <span class="meteor__tail"></span>
+      <svg class="meteor__head"><use href="#star"/></svg>
+    </div>
+
+    <div class="crest">
+      <svg class="crest__arc" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#0d2a6b" stop-opacity=".78"/>
+            <stop offset=".6" stop-color="#0a1f52" stop-opacity=".55"/>
+            <stop offset="1" stop-color="#0a1430" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path class="crest__fill" d="M30 1000 A470 940 0 0 1 970 1000 Z" fill="url(#panel)"/>
+        <path class="crest__band" d="M30 1000 A470 940 0 0 1 970 1000"/>
+        <path class="crest__dots" d="M30 1000 A470 940 0 0 1 970 1000"/>
+      </svg>
+
+      <!-- la estrella y su estela de destellos se colocan sobre el arco desde header.js -->
+      <div class="crest__trail" aria-hidden="true"></div>
+      <svg class="crest__star" aria-hidden="true"><use href="#star"/></svg>
+
+      <div class="crest__content">
+        <h1 class="title">Wish upon a star</h1>
+        <p class="subtitle">a twist community</p>
+        <div class="divider" aria-hidden="true">
+          <span></span><svg><use href="#sparkle"/></svg><span></span>
+        </div>
+        <p class="tagline">yumeshipping</p>
+      </div>
+
+      <svg class="crest__foot crest__foot--l" aria-hidden="true"><use href="#star"/></svg>
+      <svg class="crest__foot crest__foot--r" aria-hidden="true"><use href="#star"/></svg>
+    </div>
+
+    <!-- separador: banda de luces doradas con estrellas; los pies del arco se apoyan en ella -->
+    <div class="star-divider" aria-hidden="true">
+      <span class="star-divider__line"></span>
+      <span class="star-divider__stars"></span>
+    </div>
+  </header>
+
+  <!-- ============ TEMÁTICA ============ -->
+  <!-- lore.js: estrellas a los costados, aparición de párrafos, marchitado con tinta negra al hacer scroll -->
+  <section class="lore" aria-label="Temática">
+    <div class="lore__part lore__part--bright">
+      <div class="lore__text">
+        <p class="lore__p"><span class="lore__cap">H</span>ay tradiciones en Night Raven College que trascienden por encima de solo costumbres. Gestos inofensivos y románticos vestidos de magia que deberían de quedarse solo siendo una linda foto, un par de buenos recuerdos y un punto más en la línea del tiempo de las personas que poco a poco fueron abandonando los pasillos del instituto. La recolección de las <em class="lore__hl">Wishing Stars</em>, el tejido de las túnicas celestes y la danza ritual bajo el gran árbol eran, para la mayoría, solo un motivo de fiesta antes de una gran despedida.</p>
+        <div class="lore__sep" aria-hidden="true">
+          <svg class="tiny"><use href="#sparkle"/></svg><svg class="small"><use href="#sparkle"/></svg><svg class="big"><use href="#star"/></svg><svg class="small"><use href="#sparkle"/></svg><svg class="tiny"><use href="#sparkle"/></svg>
+        </div>
+        <p class="lore__p">Desde hace cuatro años ya, durante los últimos días de una de las promociones que vio ir y venir grandes sucesos para la NRC y STYXX, los jóvenes de último año entregan su anhelo más íntimo a los <em class="lore__hl">Stargazers</em>. Pidiendo al cielo con la desesperación cualquier cosa que les diera alivio ahora que están a punto de dar un salto al vacío de la adultez: promesas de grandeza, miedos no confesados, pactos de lealtad o quizás el simple deseo de no ser olvidados, romance, venganza, o incluso absolutamente nada más que un cono de helado al llegar a casa.</p>
+        <div class="lore__sep" aria-hidden="true">
+          <svg class="tiny"><use href="#sparkle"/></svg><svg class="small"><use href="#sparkle"/></svg><svg class="big"><use href="#star"/></svg><svg class="small"><use href="#sparkle"/></svg><svg class="tiny"><use href="#sparkle"/></svg>
+        </div>
+        <p class="lore__p">A la mañana siguiente, al empacar las maletas y cruzar los portones de Night Raven College por última vez como estudiantes, no hubo destellos cegadores ni explosiones, ni despedidas estridentes al final del camino. La transición al mundo mágico exterior continuó con normalidad aparente.</p>
+        <div class="lore__sep" aria-hidden="true">
+          <svg class="tiny"><use href="#sparkle"/></svg><svg class="small"><use href="#sparkle"/></svg><svg class="big"><use href="#star"/></svg><svg class="small"><use href="#sparkle"/></svg><svg class="tiny"><use href="#sparkle"/></svg>
+        </div>
+        <p class="lore__p lore__p--wither">Todo esto no sería mayor problema, si no es por que el gran árbol de Night Raven College no ha vuelto a florecer desde que se fueron, y las estrellas que jamás fueron reclutadas están comenzando a devorar la propia identidad de quienes las abandonaron.</p>
+      </div>
+    </div>
+
+    <div class="lore__part lore__part--gray">
+      <div class="lore__text">
+        <p class="lore__p">Si no regresan al campus, si no vuelven a pisar las canchas, los laboratorios y las salas comunes para desenterrar los fragmentos de lo que sintieron aquella noche, el vacío dejará de ser una molestia lejana para convertirse en una amnesia absoluta.</p>
+        <div class="lore__sep" aria-hidden="true">
+          <svg class="tiny"><use href="#sparkle"/></svg><svg class="small"><use href="#sparkle"/></svg><svg class="big"><use href="#star"/></svg><svg class="small"><use href="#sparkle"/></svg><svg class="tiny"><use href="#sparkle"/></svg>
+        </div>
+        <p class="lore__p">Los pasillos de la academia los aguardan. Pero para recuperar la memoria de su deseo, primero tendrán que recordar quiénes eran antes de que el mundo exterior los obligara a cambiar.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ADMINISTRADORES ============ -->
+  <section class="admins" aria-labelledby="admins-title">
+    <div class="section-head">
+      <h2 class="section-title" id="admins-title">Administradores</h2>
+      <div class="divider" aria-hidden="true">
+        <span></span><svg><use href="#sparkle"/></svg><span></span>
+      </div>
+      <p class="section-sub">Que todos tus deseos se hagan realidad</p>
+    </div>
+
+    <!-- data-moon: dónde se apoya la luna creciente (grados; -90 = arriba). El adorno se dibuja desde frames.js -->
+    <div class="frames">
+      <figure class="admin">
+        <div class="frame" data-moon="-135">
+          <div class="frame__photo"><img src="assets/img/admins/enpi.png" alt="Avatar de enpi" width="612" height="612" style="--fx:.5; --fy:.5; --zoom:1.25; --ar:1"></div>
+        </div>
+        <figcaption class="admin__plate">
+          <span class="admin__name">enpi</span>
+        </figcaption>
+      </figure>
+      <figure class="admin admin--center">
+        <div class="frame" data-moon="-90">
+          <div class="frame__photo"><img src="assets/img/admins/neo.png" alt="Avatar de neo" width="880" height="871" style="--fx:.5; --fy:.287; --zoom:2.3; --ar:1.0103"></div>
+        </div>
+        <figcaption class="admin__plate">
+          <span class="admin__name">neo</span>
+        </figcaption>
+      </figure>
+      <figure class="admin">
+        <div class="frame" data-moon="-45">
+          <div class="frame__photo"><img src="assets/img/admins/rivka.png" alt="Avatar de rivka" width="496" height="501" style="--fx:.454; --fy:.319; --zoom:2.8; --ar:.99"></div>
+        </div>
+        <figcaption class="admin__plate">
+          <span class="admin__name">rivka</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ ¿QUIÉNES SOMOS? ============ -->
+  <section class="about" aria-labelledby="about-title">
+    <div class="section-head">
+      <h2 class="section-title" id="about-title">¿Quiénes somos?</h2>
+      <div class="divider" aria-hidden="true">
+        <span></span><svg><use href="#sparkle"/></svg><span></span>
+      </div>
+    </div>
+
+    <div class="about__grid">
+      <div class="about__text">
+        <p>Somos un team de rolplay que quiere poder llevar la experiencia de yumeshipping a audiencias mayores dentro del universo de Twisted Wonderland.</p>
+      </div>
+
+      <!-- varita con banderín (ilustración animada) -->
+      <div class="about__art" aria-hidden="true">
+        <svg class="wand" viewBox="0 0 420 520">
+          <defs>
+            <linearGradient id="wand-bronze" x1="-1" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="scale(14 1)">
+              <stop offset="0" stop-color="#5e4118"/>
+              <stop offset=".3" stop-color="#b88a45"/>
+              <stop offset=".48" stop-color="#f0d29a"/>
+              <stop offset=".7" stop-color="#a87a38"/>
+              <stop offset="1" stop-color="#4f3613"/>
+            </linearGradient>
+            <linearGradient id="satin" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#3b7ff0"/>
+              <stop offset=".35" stop-color="#1f56c6"/>
+              <stop offset=".6" stop-color="#3a86f2"/>
+              <stop offset="1" stop-color="#1a47ad"/>
+            </linearGradient>
+            <linearGradient id="satin-sheen" x1="0" y1="0" x2="1" y2=".4">
+              <stop offset=".25" stop-color="#fff" stop-opacity="0"/>
+              <stop offset=".42" stop-color="#d8ecff" stop-opacity=".35"/>
+              <stop offset=".55" stop-color="#fff" stop-opacity="0"/>
+              <stop offset=".75" stop-color="#d8ecff" stop-opacity=".18"/>
+              <stop offset=".85" stop-color="#fff" stop-opacity="0"/>
+            </linearGradient>
+            <radialGradient id="star-halo">
+              <stop offset="0" stop-color="#bfe6ff" stop-opacity=".9"/>
+              <stop offset=".4" stop-color="#5fb4ff" stop-opacity=".35"/>
+              <stop offset="1" stop-color="#5fb4ff" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <g class="wand__float">
+            <!-- banderín de satín con borde dorado -->
+            <g class="wand__banner">
+              <path fill="url(#satin)"><animate attributeName="d" dur="7s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.25;.5;.75;1" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" values="M132 200 C70 250 40 330 100 390 C150 440 230 462 296 484 L335 470 L312 432 C250 420 178 402 142 362 C108 324 116 262 172 205 Z;M132 200 C78 248 52 334 108 392 C160 444 236 470 300 494 L338 476 L316 440 C254 428 186 404 150 364 C116 324 124 262 172 205 Z;M132 200 C70 250 40 330 100 390 C150 440 230 462 296 484 L335 470 L312 432 C250 420 178 402 142 362 C108 324 116 262 172 205 Z;M132 200 C64 254 34 324 94 386 C142 434 224 452 292 472 L332 462 L308 424 C246 412 172 398 136 358 C102 322 110 262 172 205 Z;M132 200 C70 250 40 330 100 390 C150 440 230 462 296 484 L335 470 L312 432 C250 420 178 402 142 362 C108 324 116 262 172 205 Z"/></path>
+              <path fill="url(#satin-sheen)"><animate attributeName="d" dur="7s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.25;.5;.75;1" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" values="M132 200 C70 250 40 330 100 390 C150 440 230 462 296 484 L335 470 L312 432 C250 420 178 402 142 362 C108 324 116 262 172 205 Z;M132 200 C78 248 52 334 108 392 C160 444 236 470 300 494 L338 476 L316 440 C254 428 186 404 150 364 C116 324 124 262 172 205 Z;M132 200 C70 250 40 330 100 390 C150 440 230 462 296 484 L335 470 L312 432 C250 420 178 402 142 362 C108 324 116 262 172 205 Z;M132 200 C64 254 34 324 94 386 C142 434 224 452 292 472 L332 462 L308 424 C246 412 172 398 136 358 C102 322 110 262 172 205 Z;M132 200 C70 250 40 330 100 390 C150 440 230 462 296 484 L335 470 L312 432 C250 420 178 402 142 362 C108 324 116 262 172 205 Z"/></path>
+              <path fill="none" stroke="#b98d43" stroke-width="7" stroke-linejoin="round"><animate attributeName="d" dur="7s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.25;.5;.75;1" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" values="M132 200 C70 250 40 330 100 390 C150 440 230 462 296 484 L335 470 L312 432 C250 420 178 402 142 362 C108 324 116 262 172 205 Z;M132 200 C78 248 52 334 108 392 C160 444 236 470 300 494 L338 476 L316 440 C254 428 186 404 150 364 C116 324 124 262 172 205 Z;M132 200 C70 250 40 330 100 390 C150 440 230 462 296 484 L335 470 L312 432 C250 420 178 402 142 362 C108 324 116 262 172 205 Z;M132 200 C64 254 34 324 94 386 C142 434 224 452 292 472 L332 462 L308 424 C246 412 172 398 136 358 C102 322 110 262 172 205 Z;M132 200 C70 250 40 330 100 390 C150 440 230 462 296 484 L335 470 L312 432 C250 420 178 402 142 362 C108 324 116 262 172 205 Z"/></path>
+              <path fill="none" stroke="#f5dc96" stroke-width="3" stroke-linejoin="round" stroke-dasharray="5 2 2 2"><animate attributeName="d" dur="7s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.25;.5;.75;1" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" values="M132 200 C70 250 40 330 100 390 C150 440 230 462 296 484 L335 470 L312 432 C250 420 178 402 142 362 C108 324 116 262 172 205 Z;M132 200 C78 248 52 334 108 392 C160 444 236 470 300 494 L338 476 L316 440 C254 428 186 404 150 364 C116 324 124 262 172 205 Z;M132 200 C70 250 40 330 100 390 C150 440 230 462 296 484 L335 470 L312 432 C250 420 178 402 142 362 C108 324 116 262 172 205 Z;M132 200 C64 254 34 324 94 386 C142 434 224 452 292 472 L332 462 L308 424 C246 412 172 398 136 358 C102 322 110 262 172 205 Z;M132 200 C70 250 40 330 100 390 C150 440 230 462 296 484 L335 470 L312 432 C250 420 178 402 142 362 C108 324 116 262 172 205 Z"/></path>
+              <g>
+                <animateTransform attributeName="transform" type="translate" dur="7s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.25;.5;.75;1" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" values="0 0;5 8;0 0;-4 -9;0 0"/>
+                <g transform="translate(258 440) rotate(22)" fill="#f0d79a">
+                  <path d="M0 -24 L2 -2 L24 0 L2 2 L0 24 L-2 2 L-24 0 L-2 -2 Z"/>
+                  <path d="M0 -14 L1.4 -1.4 L14 0 L1.4 1.4 L0 14 L-1.4 1.4 L-14 0 L-1.4 -1.4 Z" transform="rotate(45)"/>
+                  <circle r="5" fill="none" stroke="#f0d79a" stroke-width="1.6"/>
+                </g>
+                <use href="#sparkle" x="196" y="414" width="11" height="11" style="color:#f0d79a"/>
+                <use href="#sparkle" x="214" y="398" width="8" height="8" style="color:#f0d79a"/>
+                <use href="#sparkle" x="206" y="432" width="7" height="7" style="color:#f0d79a"/>
+              </g>
+            </g>
+
+            <!-- cadenita y broche de luna -->
+            <circle cx="151" cy="160" r="4.5" fill="none" stroke="#d8b06a" stroke-width="2"/>
+            <line x1="151" y1="166" x2="151" y2="182" stroke="#d8b06a" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+            <path d="M162 188 A12 12 0 1 0 162 204 A9 9 0 1 1 162 188 Z" fill="url(#gold-grad)" stroke="#8a5d1c" stroke-width="1"/>
+
+            <!-- varita: estrella en el origen, mango hacia abajo, todo inclinado -->
+            <g transform="translate(130 110) rotate(-38)">
+              <rect x="-13" y="38" width="26" height="16" rx="4" fill="url(#wand-bronze)"/>
+              <rect x="-9" y="54" width="18" height="200" fill="url(#wand-bronze)"/>
+              <rect x="-12" y="72" width="24" height="7" rx="2" fill="url(#wand-bronze)"/>
+              <rect x="-12" y="86" width="24" height="5" rx="2" fill="url(#wand-bronze)"/>
+              <rect x="-12" y="248" width="24" height="9" rx="3" fill="url(#wand-bronze)"/>
+              <rect x="-8" y="257" width="16" height="6" fill="url(#wand-bronze)"/>
+              <circle cy="276" r="15" fill="url(#wand-bronze)"/>
+              <ellipse cx="-4" cy="270" rx="5" ry="3" fill="#f6dfaa" opacity=".6"/>
+              <path d="M-4 290 L0 304 L4 290 Z" fill="url(#wand-bronze)"/>
+
+              <!-- estrella de cristal -->
+              <g transform="translate(0 -8) scale(1.35)">
+              <circle class="wand__halo" r="95" fill="url(#star-halo)"/>
+              <g class="wand__star">
+                <path d="M0 0 L0.0 -58.0 L-5.9 -18.1 Z" fill="#7fd0ff"/>
+                <path d="M0 0 L0.0 -58.0 L5.9 -18.1 Z" fill="#3ea2f2"/>
+                <path d="M0 0 L34.1 -46.9 L5.9 -18.1 Z" fill="#3ea2f2"/>
+                <path d="M0 0 L34.1 -46.9 L15.4 -11.2 Z" fill="#3ea2f2"/>
+                <path d="M0 0 L55.2 -17.9 L15.4 -11.2 Z" fill="#2179d9"/>
+                <path d="M0 0 L55.2 -17.9 L19.0 0.0 Z" fill="#2179d9"/>
+                <path d="M0 0 L55.2 17.9 L19.0 0.0 Z" fill="#1557b3"/>
+                <path d="M0 0 L55.2 17.9 L15.4 11.2 Z" fill="#1557b3"/>
+                <path d="M0 0 L34.1 46.9 L15.4 11.2 Z" fill="#1557b3"/>
+                <path d="M0 0 L34.1 46.9 L5.9 18.1 Z" fill="#1557b3"/>
+                <path d="M0 0 L0.0 58.0 L5.9 18.1 Z" fill="#1557b3"/>
+                <path d="M0 0 L0.0 58.0 L-5.9 18.1 Z" fill="#2179d9"/>
+                <path d="M0 0 L-34.1 46.9 L-5.9 18.1 Z" fill="#2179d9"/>
+                <path d="M0 0 L-34.1 46.9 L-15.4 11.2 Z" fill="#2179d9"/>
+                <path d="M0 0 L-55.2 17.9 L-15.4 11.2 Z" fill="#3ea2f2"/>
+                <path d="M0 0 L-55.2 17.9 L-19.0 0.0 Z" fill="#3ea2f2"/>
+                <path d="M0 0 L-55.2 -17.9 L-19.0 0.0 Z" fill="#7fd0ff"/>
+                <path d="M0 0 L-55.2 -17.9 L-15.4 -11.2 Z" fill="#7fd0ff"/>
+                <path d="M0 0 L-34.1 -46.9 L-15.4 -11.2 Z" fill="#7fd0ff"/>
+                <path d="M0 0 L-34.1 -46.9 L-5.9 -18.1 Z" fill="#7fd0ff"/>
+                <path d="M0 0 L11.1 -34.2 L-4.0 -12.4 Z" fill="#79c8ff"/>
+                <path d="M0 0 L11.1 -34.2 L10.5 -7.6 Z" fill="#79c8ff"/>
+                <path d="M0 0 L36.0 0.0 L10.5 -7.6 Z" fill="#3a97ee"/>
+                <path d="M0 0 L36.0 0.0 L10.5 7.6 Z" fill="#2271d1"/>
+                <path d="M0 0 L11.1 34.2 L10.5 7.6 Z" fill="#2271d1"/>
+                <path d="M0 0 L11.1 34.2 L-4.0 12.4 Z" fill="#2271d1"/>
+                <path d="M0 0 L-29.1 21.2 L-4.0 12.4 Z" fill="#3a97ee"/>
+                <path d="M0 0 L-29.1 21.2 L-13.0 0.0 Z" fill="#79c8ff"/>
+                <path d="M0 0 L-29.1 -21.2 L-13.0 0.0 Z" fill="#c2ecff"/>
+                <path d="M0 0 L-29.1 -21.2 L-4.0 -12.4 Z" fill="#c2ecff"/>
+                <circle r="9" fill="#e6f7ff" opacity=".55"/>
+              </g>
+              <g class="wand__glints" fill="#ffffff">
+                <use href="#sparkle" x="-9" y="-67" width="18" height="18" style="color:#fff" class="glint glint--1"/>
+                <use href="#sparkle" x="47" y="-28" width="14" height="14" style="color:#fff" class="glint glint--2"/>
+                <use href="#sparkle" x="-62" y="10" width="12" height="12" style="color:#fff" class="glint glint--3"/>
+              </g>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NORMAS · PRERREQUISITOS · CONTÁCTANOS ============ -->
+  <section class="extras" aria-label="Más de la comunidad">
+    <div class="divider" aria-hidden="true">
+      <span></span><svg><use href="#sparkle"/></svg><span></span>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Más de la comunidad">
+      <button class="tab" role="tab" id="tab-rules" aria-controls="panel-rules" aria-selected="false" tabindex="-1">
+        <svg aria-hidden="true"><use href="#sparkle"/></svg>Normas de convivencia
+      </button>
+      <button class="tab" role="tab" id="tab-prereqs" aria-controls="panel-prereqs" aria-selected="false" tabindex="-1">
+        <svg aria-hidden="true"><use href="#sparkle"/></svg>Prerrequisitos para rolear
+      </button>
+      <button class="tab" role="tab" id="tab-contact" aria-controls="panel-contact" aria-selected="true">
+        <svg aria-hidden="true"><use href="#sparkle"/></svg>Contáctanos
+      </button>
+    </div>
+
+    <!-- todos los paneles ocupan la misma celda: el alto es siempre el del más alto -->
+    <div class="tab-panels">
+      <div class="tab-panel" role="tabpanel" id="panel-rules" aria-labelledby="tab-rules" hidden>
+        <div class="info">
+          <h3 class="info__title">Normas de convivencia</h3>
+          <div class="carousel" role="region" aria-roledescription="carrusel" aria-label="Normas de convivencia">
+            <ol class="carousel__track">
+              <li class="slide is-active" role="group" aria-roledescription="diapositiva" aria-label="1 de 4">
+                <div class="note">
+                  <svg class="note__star" aria-hidden="true"><use href="#star"/></svg>
+                  <p>No se permitirán temáticas de incesto, age gaps problemáticas, y mucho menos la imposición de ships, conflictos o tramas entre yumes o personajes canon que no hayan sido aceptadas de forma entusiasta y explícita por todas las partes involucradas.</p>
+                </div>
+              </li>
+              <li class="slide" role="group" aria-roledescription="diapositiva" aria-label="2 de 4">
+                <div class="note">
+                  <svg class="note__star" aria-hidden="true"><use href="#star"/></svg>
+                  <p>No se acepta ningún tipo de actitude violenta, incluyendo la exclusión de miembros de la comunidad, el racismo, sexismo, rumores injustificados, bromas pesadas o insultos constantes hacia el carácter o apariencia de otros miembros. Si hay problemas recurrentes, fuertes o incomodidades porfavor dirigirse a los administradores presentes para poder proceder con las medidas necesarias.</p>
+                </div>
+              </li>
+              <li class="slide" role="group" aria-roledescription="diapositiva" aria-label="3 de 4">
+                <div class="note">
+                  <svg class="note__star" aria-hidden="true"><use href="#star"/></svg>
+                  <p>No se permiten genderbent characters ni usar a personajes menores de edad incluso luego del age up como Cheka o Gidel para yumeships o entre personajes canon.</p>
+                </div>
+              </li>
+              <li class="slide" role="group" aria-roledescription="diapositiva" aria-label="4 de 4">
+                <div class="note">
+                  <svg class="note__star" aria-hidden="true"><use href="#star"/></svg>
+                  <p>Como administradores nos reservamos el derecho de admisión.</p>
+                </div>
+              </li>
+            </ol>
+            <div class="carousel__nav">
+              <button type="button" class="carousel__arrow" data-step="-1" aria-label="Anterior">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 L8 12 L15 19"/></svg>
+              </button>
+              <span class="carousel__count" aria-live="polite"><b class="carousel__current">1</b><i>/</i>4</span>
+              <button type="button" class="carousel__arrow" data-step="1" aria-label="Siguiente">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 L16 12 L9 19"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" role="tabpanel" id="panel-prereqs" aria-labelledby="tab-prereqs" hidden>
+        <div class="info">
+          <h3 class="info__title">Prerrequisitos para rolear</h3>
+          <div class="carousel" role="region" aria-roledescription="carrusel" aria-label="Prerrequisitos para rolear">
+            <ol class="carousel__track">
+              <li class="slide is-active" role="group" aria-roledescription="diapositiva" aria-label="1 de 3">
+                <div class="note">
+                  <span class="note__badge" aria-hidden="true">20+</span>
+                  <p>Antes de comenzar, queremos dejar en claro que esta comunidad es para personas de <strong class="hl">20 años en adelante</strong>. Tanto los personajes como los users dentro de la comunidad deben ser mayores de edad por seguridad de todos los involucrados, comodidad de los usuarios, y por alineación ética de los dueños.</p>
+                </div>
+              </li>
+              <li class="slide" role="group" aria-roledescription="diapositiva" aria-label="2 de 3">
+                <div class="note">
+                  <svg class="note__star" aria-hidden="true"><use href="#star"/></svg>
+                  <p>En el tiempo en el que sucede este rol han pasado ya cuatro años desde lo sucedido en el libro 7. Por lo que es importante que se sepa del personaje que está deseándose rolear para ocupar su lugar. Ya sea exclusivo de eventos, RSA, o NRC. Es válido querer entrar solamente como yume si la decisión de tomar un personaje canon con esta condición es poco atractiva. Claro que esto puede verse distinto entre cada personaje por la cantidad de exposición que tengan los mismos en sus respectivos capítulos.</p>
+                </div>
+              </li>
+              <li class="slide" role="group" aria-roledescription="diapositiva" aria-label="3 de 3">
+                <div class="note">
+                  <svg class="note__star" aria-hidden="true"><use href="#star"/></svg>
+                  <p>Todos los headcanons que crean pertinentes para poder complementar el lore oficial y que les haga hacer sentir a su personaje más suyos son bienvenidos. No todos deben ser revelados en la ficha de ingreso.</p>
+                </div>
+              </li>
+            </ol>
+            <div class="carousel__nav">
+              <button type="button" class="carousel__arrow" data-step="-1" aria-label="Anterior">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 L8 12 L15 19"/></svg>
+              </button>
+              <span class="carousel__count" aria-live="polite"><b class="carousel__current">1</b><i>/</i>3</span>
+              <button type="button" class="carousel__arrow" data-step="1" aria-label="Siguiente">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 L16 12 L9 19"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" role="tabpanel" id="panel-contact" aria-labelledby="tab-contact">
+        <div class="contact">
+          <!-- el QR va dentro de .frame__qr; luego puede ser un <img class="frame__qr"> -->
+          <div class="frame frame--square">
+            <div class="frame__qr"><span>QR</span></div>
+            <!-- velo mágico que cubre el QR hasta aceptar las normas (contact.js) -->
+            <div class="qr-veil" aria-hidden="true">
+              <div class="qr-veil__seal">
+                <span class="qr-veil__ring"></span>
+                <svg class="qr-veil__star"><use href="#star"/></svg>
+              </div>
+              <p class="qr-veil__text">Acepta las normas<br>para revelar</p>
+            </div>
+          </div>
+          <div class="contact__text">
+            <h3 class="contact__title">Forma parte de la comunidad</h3>
+            <p>Acepta las normas de convivencia para revelar el código y escanéalo con la cámara de tu teléfono para entrar a nuestro grupo de WhatsApp.</p>
+            <label class="accept">
+              <input type="checkbox" id="accept-rules">
+              <span class="accept__box" aria-hidden="true"><svg><use href="#sparkle"/></svg></span>
+              <span class="accept__label">He leído y acepto las <button type="button" class="accept__link">normas de convivencia</button></span>
+            </label>
+            <p class="contact__hint">Te esperamos bajo las estrellas ✦</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- estatuas al pie de la sección: se deslizan según la pestaña elegida (statues.js) -->
+    <div class="statues" aria-hidden="true">
+      <div class="statues__track">
+        <img class="statue" src="assets/img/statues/statue-1.png" width="416" height="485" alt="" loading="lazy" decoding="async">
+        <img class="statue" src="assets/img/statues/statue-2.png" width="518" height="494" alt="" loading="lazy" decoding="async">
+        <img class="statue" src="assets/img/statues/statue-3.png" width="442" height="476" alt="" loading="lazy" decoding="async">
+        <img class="statue" src="assets/img/statues/statue-4.png" width="372" height="558" alt="" loading="lazy" decoding="async">
+        <img class="statue" src="assets/img/statues/statue-5.png" width="380" height="524" alt="" loading="lazy" decoding="async">
+        <img class="statue" src="assets/img/statues/statue-6.png" width="371" height="552" alt="" loading="lazy" decoding="async">
+        <img class="statue" src="assets/img/statues/statue-7.png" width="366" height="518" alt="" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PIE DE PÁGINA ============ -->
+  <footer class="site-footer">
+    <div class="divider" aria-hidden="true">
+      <span></span><svg><use href="#sparkle"/></svg><span></span>
+    </div>
+    <p class="disclaimer">
+      Página fan no oficial, sin fines de lucro. Twisted Wonderland y sus personajes © Disney. Published by Aniplex.
+    </p>
+  </footer>
+
+  <!-- botón para activar o silenciar los sonidos -->
+  <button class="sound-toggle" type="button" aria-pressed="true" aria-label="Silenciar sonidos">
+    <svg class="sound-toggle__on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="wave" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+    <svg class="sound-toggle__off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="wave" d="M16.5 9.5l5 5M21.5 9.5l-5 5"/></svg>
+  </button>
+
+  <script src="js/sfx.js?v=19"></script>
+  <script src="js/loader.js?v=19"></script>
+  <script src="js/header.js?v=19"></script>
+  <script src="js/frames.js?v=19"></script>
+  <script src="js/about.js?v=19"></script>
+  <script src="js/tabs.js?v=19"></script>
+  <script src="js/statues.js?v=19"></script>
+  <script src="js/contact.js?v=19"></script>
+  <script src="js/carousel.js?v=19"></script>
+  <script src="js/lore.js?v=19"></script>
+</body>
+</html>
